@@ -1,0 +1,10 @@
+{
+  "name": "claude-code (rw repo + tmpfs, ro rootfs, rust)",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "dev",
+  "workspaceFolder": "/workspaces/repo",
+  "remoteUser": "vscode",
+  "overrideCommand": false,
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "claude --version"
+}

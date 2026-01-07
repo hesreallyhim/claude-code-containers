@@ -1,0 +1,45 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    init: true
+    user: "1000:1000"
+    working_dir: /workspaces/repo
+
+    # ✅ Claude can edit your repo
+    volumes:
+      - ..:/workspaces/repo:rw,cached
+
+      # ✅ Persist Claude Code auth/config across rebuilds
+      - claude-home:/home/vscode/.claude
+
+      # ✅ Writable caches (so root fs can be read-only)
+      - npm-cache:/home/vscode/.npm
+      - node-cache:/home/vscode/.cache
+      - rustup:/home/vscode/.rustup
+      - cargo:/home/vscode/.cargo
+
+    # ✅ Hardened container defaults
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    # ✅ “temporary files” writable areas
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=1024m
+      - /run:rw,noexec,nosuid,size=64m
+
+    environment:
+      - HOME=/home/vscode
+
+    command: sleep infinity
+
+volumes:
+  claude-home:
+  npm-cache:
+  node-cache:
+  rustup:
+  cargo:
