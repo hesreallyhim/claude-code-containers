@@ -43,6 +43,7 @@ services:
     environment:
       - HOME=/home/vscode
       - NPM_CONFIG_PREFIX=/home/vscode/.npm-global
+      - CLAUDE_CODE_VERSION=2.1.19 # Keep this pinned but update regularly
 
     command: sleep infinity
 

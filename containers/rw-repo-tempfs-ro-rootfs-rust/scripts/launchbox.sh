@@ -4,11 +4,11 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  new-sandbox.sh <REPO_URL> [SANDBOX_DIR]
+  launchbox.sh <REPO_URL> [SANDBOX_DIR]
 
 Examples:
-  ./scripts/new-sandbox.sh https://github.com/org/project.git
-  ./scripts/new-sandbox.sh git@github.com:org/project.git ./sandboxes/project
+  ./scripts/launchbox.sh https://github.com/org/project.git
+  ./scripts/launchbox.sh git@github.com:org/project.git ./sandboxes/project
 
 What it does:
   - Creates SANDBOX_DIR (default: ./sandbox-<repo-name>)
@@ -91,7 +91,7 @@ else
   echo "VS Code 'code' CLI not found; skipping auto-open."
 fi
 
-# chmod +x scripts/new-sandbox.sh
-# ./scripts/new-sandbox.sh https://github.com/org/project.git
+# chmod +x scripts/launchbox.sh
+# ./scripts/launchbox.sh https://github.com/org/project.git
 # # or
 # make new REPO=https://github.com/org/project.git DIR=./sandboxes/project

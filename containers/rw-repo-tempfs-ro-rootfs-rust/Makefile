@@ -60,11 +60,17 @@ down:
 clean: down
 
 new:
-	@./scripts/new-sandbox.sh $(REPO) $(DIR)
+	@./scripts/launchbox.sh $(REPO) $(DIR)
 
+##################################
+# Run these from the host machine
+##################################
+
+# Check for any diff between the host and the container
 diff-devcontainer:
 	rsync -avnc .devcontainer/ "$(TEMPLATE_DIR)/.devcontainer/"
 
+# If the container was updated directly, backport the changes to local machine
 backport-devcontainer:
 	$(MAKE) diff-devcontainer
 	@read -p "Proceed with backport? [y/N] " ans; \

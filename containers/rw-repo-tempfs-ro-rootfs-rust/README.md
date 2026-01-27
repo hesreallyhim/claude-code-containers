@@ -67,3 +67,21 @@ Notes
 	•	repo/ is bind-mounted read/write. Edits are real and persist on your host.
 	•	Claude auth/config is stored in a named Docker volume and removed by make down / make clean.
 	•	If you see permission issues on Linux, ensure your host user is UID/GID 1000 or adjust user: in .devcontainer/docker-compose.yml.
+
+
+Syncing changes from container back to machine:
+
+- Start with a dry-run
+```bash
+rsync -avnc --delete .devcontainer/ "$(TEMPLATE_DIR)/.devcontainer/"
+```
+
+- Perofrm the backport
+```bash
+rsync -a --delete --delay-updates .devcontainer/ "$(TEMPLATE_DIR)/.devcontainer/"
+```
+
+- If success, should see a clean working tree
+```bash
+git -C "$(TEMPLATE_DIR)" status
+```
