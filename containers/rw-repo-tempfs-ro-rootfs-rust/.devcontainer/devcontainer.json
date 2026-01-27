@@ -6,5 +6,9 @@
   "remoteUser": "vscode",
   "overrideCommand": false,
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "claude --version"
+  "postCreateCommand": "bash .devcontainer/ensure-claude.sh",
+  "remoteEnv": {
+    "NPM_CONFIG_PREFIX": "/home/vscode/.npm-global",
+    "PATH": "/home/vscode/.npm-global/bin:${containerEnv:PATH}"
+  }
 }

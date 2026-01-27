@@ -2,7 +2,9 @@ SHELL := /bin/bash
 DC_FILE := .devcontainer/docker-compose.yml
 SERVICE := dev
 
-.PHONY: help up down shell logs ps claude claude-login version test build clean new
+TEMPLATE_DIR ?= ~/coding/projects/claude-code-containers/templates/rw-repo-tempfs-ro-rootfs-rust
+
+.PHONY: help up down shell logs ps claude claude-login version test build clean new diff-devcontainer backport-devcontainer
 
 help:
 	@echo "Targets:"
@@ -59,3 +61,12 @@ clean: down
 
 new:
 	@./scripts/new-sandbox.sh $(REPO) $(DIR)
+
+diff-devcontainer:
+	rsync -avnc .devcontainer/ "$(TEMPLATE_DIR)/.devcontainer/"
+
+backport-devcontainer:
+	$(MAKE) diff-devcontainer
+	@read -p "Proceed with backport? [y/N] " ans; \
+		[ "$$ans" = "y" ]
+	rsync -a --delete --delay-updates .devcontainer/ "$(TEMPLATE_DIR)/.devcontainer/"

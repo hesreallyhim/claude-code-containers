@@ -11,12 +11,16 @@ services:
     volumes:
       - ..:/workspaces/repo:rw,cached
 
+      # Writable home directory for vscode user
+      - vscode-home:/home/vscode
+
       # ✅ Persist Claude Code auth/config across rebuilds
       - claude-home:/home/vscode/.claude
 
       # ✅ Writable caches (so root fs can be read-only)
       - npm-cache:/home/vscode/.npm
       - node-cache:/home/vscode/.cache
+      - npm-global:/home/vscode/.npm-global
       - rustup:/home/vscode/.rustup
       - cargo:/home/vscode/.cargo
 
@@ -31,9 +35,14 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=1024m
       - /run:rw,noexec,nosuid,size=64m
+      # FOR READ-ONLY: Helps VS Code Remote server when root fs is read-only
+      # - /home/vscode/.vscode-server:rw,nosuid,size=512m
+      - /home/vscode/.vscode-server-insiders:rw,nosuid,size=1024m
+      
 
     environment:
       - HOME=/home/vscode
+      - NPM_CONFIG_PREFIX=/home/vscode/.npm-global
 
     command: sleep infinity
 
@@ -41,5 +50,7 @@ volumes:
   claude-home:
   npm-cache:
   node-cache:
+  npm-global:
   rustup:
   cargo:
+  vscode-home:

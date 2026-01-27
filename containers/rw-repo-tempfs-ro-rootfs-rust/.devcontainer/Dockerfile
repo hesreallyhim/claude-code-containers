@@ -18,4 +18,4 @@ USER vscode
 WORKDIR /workspaces/repo
 
 # Claude Code
-RUN npm install -g @anthropic-ai/claude-code  [oai_citation:0‡npm](https://www.npmjs.com/package/%40anthropic-ai/claude-code?utm_source=chatgpt.com)
+RUN npm install -g @anthropic-ai/claude-code
