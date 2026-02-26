@@ -1,15 +1,16 @@
 # Claude Code + Rust Devcontainer (Hardened Sandbox)
 
-This folder is a **self-contained workspace** for testing a target repo with:
+This provisions a **self-contained workspace** for testing Claude Code inside a repo with:
 
 - Claude Code running inside a container
 - Rust toolchain (rustup/cargo) inside the same container
-- A hardened runtime posture: non-root, `no-new-privileges`, dropped caps, read-only root FS, writable temp via `tmpfs`
+- A hardened runtime posture: non-root, `no-new-privileges`, dropped caps, read-only root FS, writable temp via `tmpfs`. More secure - not bulletproof.
 
 The container has **write access to the mounted repo** and **temporary writable locations** (`/tmp`, `/run`), while keeping the container filesystem read-only.
 
 ## Layout
 
+```bash
 ./
 .devcontainer/
 devcontainer.json
@@ -17,18 +18,28 @@ docker-compose.yml
 Dockerfile
 repo/ # your target repo (bind-mounted into the container)
 Makefile
+```
 
 ## Quick start
 
-1. Create a clean workspace and clone the repo you want to test:
+1. Use the `./scripts/launch-container.sh` script - pass in a repository url, and it will create a new directory, clone the repo, into that directory, and then create a Docker container inside that workspace.
 
 ```bash
-mkdir sandbox && cd sandbox
-# copy in the .devcontainer/ directory (and this README/Makefile)
-git clone <REPO_URL> repo
+# chmod +x ./scripts/launch-container.sh
+./scripts/launch-container.sh https:github.com/repo-owner/repo-name
+
+Result:
+|
+|-sandbox-repo-name/
+|---.devcontainer/ # Copied from the current directory.
+|---Makefile
+|---README.md
+|---repo-name/
 ```
 
-2.	Open this folder in VS Code and choose “Reopen in Container”.
+The script then launches into VS Code (if `code` is in your path) from inside `repo-name`.
+
+2. In VS Code, choose “Reopen in Container”.
 3.	Inside the container, authenticate Claude Code:
 
 ```bash
@@ -43,7 +54,7 @@ cd /workspaces/repo
 cargo test
 ```
 
-Teardown (remove everything container-related)
+### Teardown (remove everything container-related)
 
 From the host, in this folder:
 
@@ -57,19 +68,19 @@ This runs docker compose down -v --remove-orphans, which deletes the named volum
 If you also want the repo gone, delete the workspace folder.
 
 Common commands
-	•	Start container (headless): make up
-	•	Shell into container: make shell
-	•	Run Claude Code: make claude
-	•	Run Rust tests in repo: make test
-	•	Full cleanup: make clean
+- Start container (headless): make up
+- Shell into container: make shell
+- Run Claude Code: make claude
+- Run Rust tests in repo: make test
+- Full cleanup: make clean
 
 Notes
-	•	repo/ is bind-mounted read/write. Edits are real and persist on your host.
-	•	Claude auth/config is stored in a named Docker volume and removed by make down / make clean.
-	•	If you see permission issues on Linux, ensure your host user is UID/GID 1000 or adjust user: in .devcontainer/docker-compose.yml.
+- `repo-name/` is bind-mounted read/write. Edits are real and persist on your host.
+- Claude auth/config is stored in a named Docker volume and removed by `make down` / `make clean`.
+- If you see permission issues on Linux, ensure your host user is UID/GID 1000 or adjust user: in `.devcontainer/docker-compose.yml`.
 
 
-Syncing changes from container back to machine:
+### Syncing changes from container back to machine:
 
 - Start with a dry-run
 ```bash
